@@ -1,12 +1,4 @@
-#-*- coding:utf-8 -*-
 
-
-"""
-By:
-Time:
-Intro:
-
-"""
 import math
 import random
 
