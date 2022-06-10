@@ -1,0 +1,1 @@
+from quaking.color.setting import ColorSetting
