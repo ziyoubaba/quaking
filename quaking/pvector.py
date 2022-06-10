@@ -1,6 +1,6 @@
-
 import math
 import random
+
 
 class PVector(object):
     def __init__(self, x, y, z=0.0):
@@ -9,23 +9,23 @@ class PVector(object):
         self.z = z
 
     def __add__(self, other):
-        return PVector( self.x+other.x, self.y+other.y, self.z+other.z )
+        return PVector(self.x + other.x, self.y + other.y, self.z + other.z)
 
     def __sub__(self, other):
-        return PVector( self.x-other.x, self.y-other.y, self.z-other.z )
+        return PVector(self.x - other.x, self.y - other.y, self.z - other.z)
 
     def __mul__(self, numer):
         # 向量积
-        return PVector( self.x * numer, self.y * numer, self.z * numer )
+        return PVector(self.x * numer, self.y * numer, self.z * numer)
 
     def __divmod__(self, numer):
         # 除法
         return PVector(self.x / numer, self.y / numer, self.z / numer)
 
     def dist(self, other):
-        return  ( (self.x - other.x) ** 2 +
-                  (self.y - other.y) ** 2 +
-                  (self.z - other.z) ** 2 ) ** 0.5
+        return ((self.x - other.x) ** 2 +
+                (self.y - other.y) ** 2 +
+                (self.z - other.z) ** 2) ** 0.5
 
     def set(self, x, y, z):
         self.x = x
@@ -34,27 +34,27 @@ class PVector(object):
 
     @classmethod
     def random2D(cls):
-        x = 2 * (random.random() ) - 1
-        y = random.choice((-1, 1)) * (1-x**2) ** 0.5
+        x = 2 * (random.random()) - 1
+        y = random.choice((-1, 1)) * (1 - x ** 2) ** 0.5
         return PVector(x, y, 0)
 
     @classmethod
     def random3D(cls):
         x = 2 * (random.random()) - 1
         y = 2 * (random.random()) - 1
-        z = random.choice((-1, 1)) * (1 - x**2 - y**2) ** 0.5
+        z = random.choice((-1, 1)) * (1 - x ** 2 - y ** 2) ** 0.5
         return PVector(x, y, z)
 
     @classmethod
     def fromAngle(cls, angle):
         #  Calculates and returns a new 2D unit vector from the specified angle value (in radians 弧度制).
-        return PVector( math.cos(angle), math.sin(angle) )
+        return PVector(math.cos(angle), math.sin(angle))
 
     def mag(self):
         # sqrt(x * x + y * y + z * z).)
-        return (  (self.x ) ** 2 +
-                  (self.y ) ** 2 +
-                  (self.z ) ** 2 ) ** 0.5
+        return ((self.x) ** 2 +
+                (self.y) ** 2 +
+                (self.z) ** 2) ** 0.5
 
     def magSq(self):
         return ((self.x) ** 2 +
@@ -81,7 +81,7 @@ class PVector(object):
     def normalize(self):
         mag = self.mag()
         if mag:
-            return PVector(self.x/mag, self.y/mag, self.z/mag)
+            return PVector(self.x / mag, self.y / mag, self.z / mag)
         else:
             return PVector(0, 0, 0)
 
@@ -89,7 +89,7 @@ class PVector(object):
         mag = self.mag()
         if mag:
             numer = min(max_numer, mag)
-            return PVector(self.x/mag * numer, self.y/mag * numer, self.z/mag * numer)
+            return PVector(self.x / mag * numer, self.y / mag * numer, self.z / mag * numer)
         else:
             return PVector(0, 0, 0)
 
@@ -106,8 +106,8 @@ class PVector(object):
         :return:
         """
         return PVector(
-            self.x * math.cos(theta) - self.y * math.sin( theta),
-            self.x * math.sin(theta) + self.y * math.cos( theta),
+            self.x * math.cos(theta) - self.y * math.sin(theta),
+            self.x * math.sin(theta) + self.y * math.cos(theta),
             self.z
         )
 
@@ -119,20 +119,20 @@ amt	float: The amount of interpolation; some value between 0.0 (old vector) and 
         :return:
         """
         return PVector(
-            self.x + (other.x - self.x ) * amt,
-            self.y + (other.y - self.y ) * amt,
-            self.z + (other.z - self.z ) * amt,
+            self.x + (other.x - self.x) * amt,
+            self.y + (other.y - self.y) * amt,
+            self.z + (other.z - self.z) * amt,
         )
 
     def angleBetween(self, other):
-        dot_num = self.dot( other )
+        dot_num = self.dot(other)
 
         mag_self = self.mag()
         mag_other = other.mag()
         mul_mag = mag_self * mag_other
         if mul_mag:
             cos_theta = dot_num / mul_mag
-            return math.acos( cos_theta )   # 弧度
+            return math.acos(cos_theta)  # 弧度
         else:
             return 0
 
@@ -149,23 +149,22 @@ if __name__ == '__main__':
     print(a.dist(b))
     print(PVector(20, 30, 40).mag())
     print(PVector(20, 30, 40).magSq())
-    print(PVector(10, 20, 0).dot(PVector( 60, 80, 0 )))
-    e = PVector(10, 20, 2).cross(PVector( 60, 80, 6 ))
-    print( e.array() )
-    print(PVector( 10, 20, 2 ).normalize().array())
-    print(PVector( 10, 20, 2 ).limit(100).array())
-    print(PVector( 3, 4, 0 ).limit(10).array())
-    print(PVector( 10.0, 20.0, 0 ).heading())
+    print(PVector(10, 20, 0).dot(PVector(60, 80, 0)))
+    e = PVector(10, 20, 2).cross(PVector(60, 80, 6))
+    print(e.array())
+    print(PVector(10, 20, 2).normalize().array())
+    print(PVector(10, 20, 2).limit(100).array())
+    print(PVector(3, 4, 0).limit(10).array())
+    print(PVector(10.0, 20.0, 0).heading())
     # print(math.pi)
-    print(PVector( 10.0, 20.0, 0 ).rotate( math.pi / 2 ).array())
-    print(PVector( 10.0, 20.0, 0 ).rotate( 90).array())
-    print(PVector( 0.0, 0.0, 0 ).lerp( PVector(100.0, 100.0, 0)).array() )
-    print(PVector( 10.0, 20.0, 0 ).angleBetween( PVector(60, 80, 0)) )
-    print(PVector.fromAngle( 0.01 ).array() )
-    print(PVector.random2D( ).array() )
-    print(PVector.random3D( ).array() )
+    print(PVector(10.0, 20.0, 0).rotate(math.pi / 2).array())
+    print(PVector(10.0, 20.0, 0).rotate(90).array())
+    print(PVector(0.0, 0.0, 0).lerp(PVector(100.0, 100.0, 0)).array())
+    print(PVector(10.0, 20.0, 0).angleBetween(PVector(60, 80, 0)))
+    print(PVector.fromAngle(0.01).array())
+    print(PVector.random2D().array())
+    print(PVector.random3D().array())
     _sum = 0
     for i in PVector.random3D().array():
         _sum += i ** 2
     print(_sum)
-
