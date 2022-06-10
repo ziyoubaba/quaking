@@ -4,10 +4,10 @@ from quaking.environment import Environment
 from quaking.color import ColorSetting
 from quaking.mouse import Mouse
 from quaking.keyboard import Keyboard
-from quaking.shape import Shape2D
+from quaking.shape import Shape2D, ShapeAttributes
 
 
-class Quaking(Basic, Environment, ColorSetting, Mouse, Keyboard, Shape2D):
+class Quaking(Basic, Environment, ColorSetting, Mouse, Keyboard, Shape2D, ShapeAttributes):
     def __init__(self, width: int = 100, height: int = 100, title: str = '', swap_buffer: bool = False):
         Basic.__init__(self, width, height, title=title, swap_buffer=swap_buffer)
         Environment.__init__(self, self, width, height)
@@ -15,6 +15,7 @@ class Quaking(Basic, Environment, ColorSetting, Mouse, Keyboard, Shape2D):
         Mouse.__init__(self, self)
         Keyboard.__init__(self, self)
         Shape2D.__init__(self, self)
+        ShapeAttributes.__init__(self, self)
         # 注册事件
         self.regiet_events()
 

@@ -5,7 +5,7 @@ class ColorSetting:
     def __init__(self, quaking):
         # todo 支持图片
         self.quaking = quaking
-        self.background_color = None
+        self.background_color = (235, 235, 235, 255)
 
     def background(self, r, g, b, a=255):
         self.background_color = (r, g, b, a)
@@ -26,3 +26,15 @@ class ColorSetting:
             self.quaking.obj_engine.drawQuad(0, 0, self.quaking.width, 0, self.quaking.width, self.quaking.height,
                                                    0, self.quaking.height, 1, 1, 1, 1)
             GL.glDisable(GL.GL_DEPTH_TEST)
+
+    def fill(self, *args, **kwargs):
+        return self.quaking.obj_engine.fill(*args, **kwargs)
+
+    def noFill(self, *args, **kwargs):
+        return self.quaking.obj_engine.noFill(*args, **kwargs)
+
+    def stroke(self, *args, **kwargs):
+        return self.quaking.obj_engine.stroke(*args, **kwargs)
+
+    def noStroke(self, *args, **kwargs):
+        return self.quaking.obj_engine.noStroke(*args, **kwargs)

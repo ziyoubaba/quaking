@@ -20,13 +20,15 @@ def demo2():
 
     def setup():
         app.background(255, 255, 255)
-        app.frame_rate(10)
+        app.frame_rate(30)
+        app.stroke(255,0,0)
+        app.strokeWeight(3)
 
     def draw():
         # app.background(random.randint(50, 100), random.randint(50, 100), random.randint(50, 100))
         # app.size(random.randint(50, 100), random.randint(50, 100))
         app.point(random.randint(50, 100), random.randint(50, 100))
-        app.point(app.mouseX, app.mouseY)
+        app.point(app.mouseX, app.mouseY, stroke_color=(0,0,0,255), stroke_weight=2)
 
     app.run( setup, draw )
 

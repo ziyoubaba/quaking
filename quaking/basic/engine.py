@@ -42,7 +42,7 @@ def wrap_stroke(shape=0, set_fill=False):
 
 class Engine():
     def __init__(self):
-        self.background_color = (235, 235, 235, 255)
+        # self.background_color = (235, 235, 235, 255)
         self.stroke_weight = 1  # 线条宽度
         self.stroke_color = (0, 0, 0, 255)  # 线条颜色
         self.fill_color = None  # 填充颜色
@@ -347,3 +347,18 @@ class Engine():
             if stroke_weight:
                 # 2 线框
                 self.drawPolygonLine(points, stroke_color=stroke_color, stroke_weight=stroke_weight)
+
+    def fill(self, r, g, b, a=255):
+        self.fill_color = (r, g, b, a)
+
+    def noFill(self):
+        self.fill_color = None
+
+    def stroke(self, r, g, b, a=255):
+        self.stroke_color = (r, g, b, a)
+
+    def noStroke(self):
+        self.stroke_color = None
+
+    def strokeWeight(self, w):
+        self.stroke_weight = w
