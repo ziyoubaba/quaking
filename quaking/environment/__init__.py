@@ -1,17 +1,32 @@
 import glfw
 
 class Environment:
-    def __init__(self, quaking, width:int=100, height:int=100):
+    def __init__(self, quaking):
         self.quaking = quaking
-        self.width = width
-        self.height = height
+
+    @property
+    def width(self):
+        return self.quaking.obj_window.width
+
+    @property
+    def height(self):
+        return self.quaking.obj_window.height
 
     def size(self, width, height):
-        if width != self.width or height != self.height:
-            # 尺寸存在变动
-            self.width = width
-            self.height = height
-            glfw.set_window_size(self.quaking.obj_window.window, width, height)
-            # if self.quaking.background_color:
-            #     # 更新背景颜色
-            #     self.quaking.background(*self.quaking.background_color)
+        return self.quaking.obj_window.size(width, height)
+
+    @property
+    def display_width(self):
+        return self.quaking.obj_window.display_width
+
+    @property
+    def display_height(self):
+        return self.quaking.obj_window.display_height
+
+    @property
+    def focused(self):
+        return self.quaking.obj_window.focused
+
+    def full_screen(self, monitor=None):
+        return self.quaking.obj_window.full_screen(monitor)
+

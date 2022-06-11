@@ -2,18 +2,18 @@ import glfw, time
 
 class Mouse:
     # 鼠标按键
-    MOUSELEFT = 0  # 左键
-    MOUSERIGHT = 1  # 右
-    MOUSEMID = 2  # 中间
+    MOUSE_LEFT = 0  # 左键
+    MOUSE_RIGHT = 1  # 右
+    MOUSE_MID = 2  # 中间
 
     # 鼠标箭头形状
-    CURSORSHAPEARROW = 0
-    CURSORSHAPEIBEAM = 1
-    CURSORSHAPECROSSHAIR = 2
-    CURSORSHAPEHAND = 3
-    CURSORSHAPEHRESIZE = 4
-    CURSORSHAPEVRESIZE = 5
-    CURSORSHAPEIMAGE = 6
+    MOUSE_ARROW = 0
+    MOUSE_IBEAM = 1
+    MOUSE_CROSSHAIR = 2
+    MOUSE_HAND = 3
+    MOUSE_HRESIZE = 4
+    MOUSE_VRESIZE = 5
+    MOUSE_IMAGE = 6
 
     def __init__(self, quaking):
         self.quaking = quaking
@@ -33,19 +33,19 @@ class Mouse:
         # glfw.set_input_mode(self.window, glfw.HAND_CURSOR, glfw.CURSOR_NORMAL)
         if not shape:
             shape = 0
-        if shape == self.CURSORSHAPEARROW:
+        if shape == self.MOUSE_ARROW:
             cursor = glfw.create_standard_cursor(glfw.ARROW_CURSOR)
-        elif shape == self.CURSORSHAPEIBEAM:
+        elif shape == self.MOUSE_IBEAM:
             cursor = glfw.create_standard_cursor(glfw.IBEAM_CURSOR)
-        elif shape == self.CURSORSHAPECROSSHAIR:
+        elif shape == self.MOUSE_CROSSHAIR:
             cursor = glfw.create_standard_cursor(glfw.CROSSHAIR_CURSOR)
-        elif shape == self.CURSORSHAPEHAND:
+        elif shape == self.MOUSE_HAND:
             cursor = glfw.create_standard_cursor(glfw.HAND_CURSOR)
-        elif shape == self.CURSORSHAPEHRESIZE:
+        elif shape == self.MOUSE_HRESIZE:
             cursor = glfw.create_standard_cursor(glfw.HRESIZE_CURSOR)
-        elif shape == self.CURSORSHAPEVRESIZE:
+        elif shape == self.MOUSE_VRESIZE:
             cursor = glfw.create_standard_cursor(glfw.VRESIZE_CURSOR)
-        elif shape == self.CURSORSHAPEIMAGE:
+        elif shape == self.MOUSE_IMAGE:
             if img:
                 # todo 创建图片型指针
                 pass
@@ -95,26 +95,27 @@ class Mouse:
 
     # 自定义事件
     def mouseClicked(self, btn_id=None):
-        print("点击了", btn_id)
+        # print("点击了", btn_id)
+        pass
         # if btn_id == self.MouseLeft:
         #     self.stroke_weight = 3
 
     def mouseDragged(self, *args, **kwargs):
-        print("拖拽", *args, **kwargs)
+        # print("拖拽", *args, **kwargs)
         pass
 
     def mouseMoved(self, *args, **kwargs):
-        print("移动", *args, **kwargs)
+        # print("移动", *args, **kwargs)
         pass
 
     def mousePressed(self, *args, **kwargs):
-        print("长按", *args, **kwargs)
+        # print("长按", *args, **kwargs)
         pass
 
     def mouseReleased(self, *args, **kwargs):
-        print("松开", *args, **kwargs)
+        # print("松开", *args, **kwargs)
         pass
 
     def mouseWheel(self, *args, **kwargs):
-        print("滚动", *args, **kwargs)
+        # print("滚动", *args, **kwargs)
         pass

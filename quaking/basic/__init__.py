@@ -11,6 +11,7 @@ class Basic(object):
         self.obj_window = Window(width, height, title=title, swap_buffer=swap_buffer)
         self.obj_engine = Engine()
         self.fps = fps
+        self.frame_count = 0
 
     def frame_rate(self, fps):
         self.fps = fps
@@ -30,16 +31,6 @@ class Basic(object):
                 frame_start = glfw.get_time()
 
             # GL.glClear(GL.GL_COLOR_BUFFER_BIT)
-            # if self.frame_count <= 1:
-            #     # # 初始帧
-            #     GL.glClear(GL.GL_COLOR_BUFFER_BIT)
-            #     # print("started")
-            #     if setup:
-            #         setup()
-            #         # 获取 setup 之后的背景图 与 宽高
-            # else:
-            #     if draw != None:
-            #         draw()
 
             # Swap front and back buffers
             if setup and not do_setup:
@@ -57,7 +48,7 @@ class Basic(object):
             # Poll for and process events
             glfw.poll_events()
             # print(self.frame_count / frame_start)
-            # self.frame_count += 1
+            self.frame_count += 1
             # print(self.frame_count)
         glfw.terminate()
 

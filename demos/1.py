@@ -16,11 +16,11 @@ def demo1():
     app.run( setup, draw )
 
 def demo2():
-    app = Quaking(100, 200)
+    app = Quaking(100, 100)
 
     def setup():
-        app.background(255, 255, 255)
-        app.frame_rate(30)
+        app.background(235, 235, 235)
+        app.frame_rate(10)
         app.stroke(255,0,0)
         app.strokeWeight(3)
 
