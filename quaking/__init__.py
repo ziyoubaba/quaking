@@ -20,8 +20,10 @@ class Quaking(Basic, Environment, ColorSetting, Mouse, Keyboard, Shape2D, ShapeA
         self.regiet_events()
 
     def regiet_events(self):
-        # glfw.set_window_size_callback(self.obj_window.window, self.obj_window.window_size_callback)
+        # glfw.set_window_size_callback(self.obj_window.window, self.framebuffer_size_callback)
         glfw.set_framebuffer_size_callback(self.obj_window.window, self.framebuffer_size_callback)  #
+        # glfw.set_window_maximize_callback(self.obj_window.window, self.framebuffer_size_callback)  #
+        # glfw.set_window_iconify_callback(self.obj_window.window, self.obj_window.window_iconify_callback)  #
         glfw.set_window_pos_callback(self.obj_window.window, self.obj_window.window_pos_callback)  #
         # Mouse
         glfw.set_cursor_pos_callback(self.obj_window.window, self.mouse_position_callback)  # 鼠标移动事件
@@ -35,9 +37,10 @@ class Quaking(Basic, Environment, ColorSetting, Mouse, Keyboard, Shape2D, ShapeA
 
     def framebuffer_size_callback(self, *args, **kwargs):
         # 设置尺寸和坐标系
-        self.obj_window.framebuffer_size_callback(*args, **kwargs)
+        status = self.obj_window.framebuffer_size_callback(*args, **kwargs)
         # 设置背景
-        self.setting()
+        if status and (not self.swap_buffer):
+            self.setting()
 
     def setting(self):
         if self.background_color:

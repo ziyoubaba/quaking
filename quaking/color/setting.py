@@ -38,3 +38,6 @@ class ColorSetting:
 
     def noStroke(self, *args, **kwargs):
         return self.quaking.obj_engine.noStroke(*args, **kwargs)
+
+    def clear(self, ):
+        return self.quaking.obj_engine.clear()

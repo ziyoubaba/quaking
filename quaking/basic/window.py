@@ -22,10 +22,13 @@ class Window(object):
         self.width, self.height = glfw.get_window_size(self.window)
         self.pwidth = self.width
         self.pheight = self.height
+
         self.set_coor(self.width, self.height)
         # position
         self.posx, self.posy = glfw.get_window_pos(self.window)
         self.pposx, self.pposy = self.posx, self.posy
+        #
+        # Todo glReadPixels
 
     def create_window(self, width, height, title, monitor=None):
         window = glfw.create_window(width, height, title, monitor=monitor, share=None)
@@ -87,12 +90,17 @@ class Window(object):
             glfw.set_window_size(self.window, width, height)
 
     def framebuffer_size_callback(self, window, width, height):
-        # print("resized: ", width, height, self.width, self.height)
-        self.pwidth = self.width
-        self.pheight = self.height
-        self.width = width
-        self.height = height
-        self.set_coor(width, height)
+        if width and height:
+            # print("resized: ", width, height, self.width, self.height)
+            # glfw.get_window_frame_size()
+            self.pwidth = self.width
+            self.pheight = self.height
+            self.width = width
+            self.height = height
+            self.set_coor(width, height)
+            return True
+        else:
+            return False
 
     def window_pos_callback(self, window, posx, posy):
         # print("pos: ", posx, posy, self.posx, self.posy)
@@ -100,6 +108,12 @@ class Window(object):
         self.posx = posx
         self.posy = posy
 
-    def window_size_callback(self, *args, **kwargs):
-        # print("window Size: ", args, kwargs)
-        pass
+    def window_iconify_callback(self, window, iconified):
+        # 最小化
+        print("window iconify: ", iconified)
+        if iconified:
+            # The window was iconified
+            pass
+        else:
+            # The window was restored
+            pass

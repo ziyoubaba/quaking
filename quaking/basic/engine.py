@@ -45,7 +45,8 @@ class Engine():
         # self.background_color = (235, 235, 235, 255)
         self.stroke_weight = 1  # 线条宽度
         self.stroke_color = (0, 0, 0, 255)  # 线条颜色
-        self.fill_color = None  # 填充颜色
+        self.fill_color = (255, 255, 255, 0)  # 填充颜色
+        self.smooth()
 
     @wrap_stroke(1)
     def point(self, x, y, z=0, stroke_color=None, stroke_weight=None):
@@ -362,3 +363,24 @@ class Engine():
 
     def strokeWeight(self, w):
         self.stroke_weight = w
+
+    def clear(self):
+        # 清除颜色
+        GL.glClear(GL.GL_COLOR_BUFFER_BIT)
+
+    def smooth(self):
+        # 开启抗锯齿 way1
+        GL.glEnable(GL.GL_BLEND)
+        GL.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA)
+        GL.glEnable(GL.GL_LINE_SMOOTH)
+        GL.glEnable(GL.GL_POINT_SMOOTH)
+        GL.glEnable(GL.GL_POLYGON_SMOOTH)
+        # way 2
+        # GL.glEnable(GL.GL_MULTISAMPLE)
+
+    def noSmooth(self):
+        # 关闭抗锯齿功能
+        GL.glDisable(GL.GL_BLEND)
+        GL.glDisable(GL.GL_LINE_SMOOTH)
+        GL.glDisable(GL.GL_POINT_SMOOTH)
+        GL.glDisable(GL.GL_POLYGON_SMOOTH)

@@ -8,6 +8,7 @@ from quaking.basic.engine import Engine
 
 class Basic(object):
     def __init__(self, width, height, title:str='', swap_buffer:bool=False, fps:int=60):
+        self.swap_buffer = swap_buffer
         self.obj_window = Window(width, height, title=title, swap_buffer=swap_buffer)
         self.obj_engine = Engine()
         self.fps = fps
