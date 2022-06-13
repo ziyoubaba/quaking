@@ -378,7 +378,7 @@ class Engine():
         # way 2
         # GL.glEnable(GL.GL_MULTISAMPLE)
 
-    def noSmooth(self):
+    def no_smooth(self):
         # 关闭抗锯齿功能
         GL.glDisable(GL.GL_BLEND)
         GL.glDisable(GL.GL_LINE_SMOOTH)

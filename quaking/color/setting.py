@@ -41,3 +41,9 @@ class ColorSetting:
 
     def clear(self, ):
         return self.quaking.obj_engine.clear()
+
+    def smooth(self):
+        return self.quaking.obj_engine.smooth()
+
+    def no_smooth(self):
+        return self.quaking.obj_engine.no_smooth()

@@ -3,7 +3,7 @@ from OpenGL import GL, GLU
 
 
 class Window(object):
-    def __init__(self, width, height, title: str='', swap_buffer: bool=False, ):
+    def __init__(self, width, height, title: str='', swap_buffer: bool=False):
         if not glfw.init():
             raise RuntimeError("glfw init error")
         # glfw 配置
@@ -29,6 +29,7 @@ class Window(object):
         self.pposx, self.pposy = self.posx, self.posy
         #
         # Todo glReadPixels
+        # self.read_gl_pixels()
 
     def create_window(self, width, height, title, monitor=None):
         window = glfw.create_window(width, height, title, monitor=monitor, share=None)
@@ -89,10 +90,17 @@ class Window(object):
             # 尺寸存在变动
             glfw.set_window_size(self.window, width, height)
 
+    def read_gl_pixels(self):
+        self.pixels = GL.glReadPixels(0, 0, self.width, self.height, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE)
+        self.pixels_w = self.width
+        self.pixels_h = self.height
+
+    def draw_gl_pixels(self, pixels, width, height):
+        GL.glDrawPixels(width, height, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, pixels)
+
     def framebuffer_size_callback(self, window, width, height):
         if width and height:
             # print("resized: ", width, height, self.width, self.height)
-            # glfw.get_window_frame_size()
             self.pwidth = self.width
             self.pheight = self.height
             self.width = width
@@ -110,7 +118,7 @@ class Window(object):
 
     def window_iconify_callback(self, window, iconified):
         # 最小化
-        print("window iconify: ", iconified)
+        # print("window iconify: ", iconified)
         if iconified:
             # The window was iconified
             pass

@@ -40,7 +40,23 @@ class Quaking(Basic, Environment, ColorSetting, Mouse, Keyboard, Shape2D, ShapeA
         status = self.obj_window.framebuffer_size_callback(*args, **kwargs)
         # 设置背景
         if status and (not self.swap_buffer):
+            """
             self.setting()
+            self.obj_window.draw_gl_pixels(self.obj_window.pixels, self.obj_window.pixels_w, self.obj_window.pixels_h)
+            """
+            # restart the programe
+            # print("buffer size change")
+            Basic.__init__(self, self.width, self.height, title=self.title, swap_buffer=self.swap_buffer,
+                           obj_window=self.obj_window)
+            Environment.__init__(self, self)
+            ColorSetting.__init__(self, self)
+            Mouse.__init__(self, self)
+            Keyboard.__init__(self, self)
+            Shape2D.__init__(self, self)
+            ShapeAttributes.__init__(self, self)
+            self.clear()
+            self.setting()
+            self.refresh = True
 
     def setting(self):
         if self.background_color:
@@ -49,4 +65,3 @@ class Quaking(Basic, Environment, ColorSetting, Mouse, Keyboard, Shape2D, ShapeA
     def run(self, setup, draw):
         self.setting()
         self.loop(setup, draw)
-
