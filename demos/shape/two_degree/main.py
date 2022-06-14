@@ -22,12 +22,12 @@ def main():
         app.point(30, 73)
 
     def draw():
-        # app.background(235, 235, 235, 235)
+        # app.background(235, 235, 235, 50)
         # app.clear()
         # print(random.randint(0, 100))
         if app.mouse_pressed:
             app.point(app.mouseX, app.mouseY, stroke_weight=1)
-        app.point(random.randint(0, 100), random.randint(0, 100))
+        # app.point(random.randint(0, 100), random.randint(0, 100))
 
     app.run( setup, draw )
 

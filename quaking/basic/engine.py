@@ -1,5 +1,6 @@
 from OpenGL import GL, GLU
 from functools import partial, wraps
+from math import pi, sin, cos, atan2
 
 
 def wrap_stroke(shape=0, set_fill=False):
@@ -299,14 +300,113 @@ class Engine():
                 # 2 线框
                 self.drawPolygonLine(points, stroke_color=stroke_color, stroke_weight=stroke_weight)
 
+    def drawLineStripLine(self, points, stroke_color=None, stroke_weight=None):
+        if stroke_weight:
+            GL.glLineWidth(stroke_weight)
+        if stroke_color:
+            GL.glColor4ub(*self.stroke_color)
+        GL.glBegin(GL.GL_LINE_STRIP)    # 如果绘制整圆，选GL_LINE_LOOP更好
+        for point in points:
+            GL.glVertex2f(*point)
+        GL.glEnd()
+
+    def drawLineStrip(self, line_points, fill_points, stroke_color=None, stroke_weight=None, fill_color=None):
+        if not fill_color:
+            if stroke_weight:
+                # 线框
+                self.drawLineStripLine(line_points, stroke_color=stroke_color, stroke_weight=stroke_weight)
+        else:
+            # 填充与线框
+            # 1 填充
+            self.drawPolygonFill(fill_points, fill_color=fill_color)
+            if stroke_weight:
+                # 2 线框
+                self.drawLineStripLine(line_points, stroke_color=stroke_color, stroke_weight=stroke_weight)
+
     @wrap_stroke(2, set_fill=True)
     def circle(self, x, y, diameter, stroke_color=None, stroke_weight=None, fill_color=None):
         radius = int(diameter / 2)
         points = self.circle_points(x, y, radius)
         self.drawPolygon(points, stroke_color=stroke_color, stroke_weight=stroke_weight, fill_color=fill_color)
 
-    def arc(self):
-        pass
+    def arc_circle(self, x, y, diameter, ts, te):
+        """
+
+        :param x:
+        :param y:
+        :param diameter:
+        :param ts:
+        :param te:
+        :return:
+        """
+        radius = int(diameter / 2)
+        if te < ts:  # 当终止角比起始角还小时，则将终止角加上2π
+            te += 2 * pi
+        dt = 1 / radius  # 弧度 = 弧长 / 半径，用dt作弧度的改变量
+        t = ts  # ts为初始弧度，te为终止弧度
+        points = []
+        while (t <= te):
+            # 按参数方程求出坐标
+            xc = x + radius * cos(t)
+            yc = y + radius * sin(t)
+            t += dt
+            points.append((xc, yc))
+        return points
+
+    def arc_ellipse(self, x, y, rw, rh, ts, te):
+        a = int(rw/2)
+        b = int(rh/2)
+        def eccentric_angle(t):
+            return atan2(a*sin(t), b*cos(t))
+        dt = 1 / max(a, b)
+        t = ts  # ts为初始弧度，te为终止弧度
+        points = []
+        while (t <= te):
+            # 按参数方程求出坐标
+            ecc_angle = eccentric_angle(t)
+            xc = x + a * cos(ecc_angle)
+            yc = y + b * sin(ecc_angle)
+            t += dt
+            points.append((xc, yc))
+        return points
+
+
+    @wrap_stroke(2, set_fill=True)
+    def arc(self, x, y, rw, rh, ts, te, stroke_color=None, stroke_weight=None, fill_color=None, mode=0):
+        if rw == rh:
+            points = self.arc_circle(x, y, rw, ts, te)
+        else:
+            points = self.arc_ellipse(x, y, rw, rh, ts, te)
+        # print(points)
+        if mode == 0:
+            # pie filled without line
+            line_points = tuple(points)
+            points.append((x, y))
+            points.insert(0, (x, y))
+            fill_points = tuple(points)
+        elif mode == 2:
+            # pie filled with line
+            points.append((x, y))
+            points.insert(0, (x, y))
+            line_points = tuple(points)
+            fill_points = tuple(points)
+        elif mode == 3:
+            # open
+            line_points = fill_points = tuple(points)
+        elif mode == 4:
+            # CHORD
+            points.append(points[0])
+            line_points = tuple(points)
+            fill_points = tuple(points)
+        else:
+            line_points = tuple(points)
+            points.append((x, y))
+            points.insert(0, (x, y))
+            fill_points = tuple(points)
+
+        self.drawLineStrip(line_points=line_points, fill_points=fill_points, stroke_color=stroke_color,
+                           stroke_weight=stroke_weight, fill_color=fill_color)
+
 
     @wrap_stroke(2, set_fill=True)
     def ellipse(self, x, y, a, b, stroke_color=None, stroke_weight=None, fill_color=None):
