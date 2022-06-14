@@ -265,7 +265,7 @@ class EngineShape2d():
         if stroke_weight:
             GL.glLineWidth(stroke_weight)
         if stroke_color:
-            GL.glColor4ub(*self.stroke_color)
+            GL.glColor4ub(*stroke_color)
         GL.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_LINE)
         GL.glBegin(GL.GL_LINE_LOOP)
         for point in points:
@@ -298,7 +298,7 @@ class EngineShape2d():
         if stroke_weight:
             GL.glLineWidth(stroke_weight)
         if stroke_color:
-            GL.glColor4ub(*self.stroke_color)
+            GL.glColor4ub(*stroke_color)
         GL.glBegin(GL.GL_LINE_STRIP)  # 如果绘制整圆，选GL_LINE_LOOP更好
         for point in points:
             GL.glVertex3f(*point, 0)
@@ -419,7 +419,7 @@ class EngineShape2d():
         self.stroke_color = (r, g, b, a)
 
     def noStroke(self):
-        self.stroke_color = None
+        self.stroke_weight = 0
 
     def strokeWeight(self, w):
         self.stroke_weight = w

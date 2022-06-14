@@ -36,8 +36,8 @@ class ColorSetting:
     def stroke(self, *args, **kwargs):
         return self.quaking.obj_engine.stroke(*args, **kwargs)
 
-    def noStroke(self, *args, **kwargs):
-        return self.quaking.obj_engine.noStroke(*args, **kwargs)
+    def noStroke(self, ):
+        return self.quaking.obj_engine.noStroke()
 
     def clear(self, ):
         return self.quaking.obj_engine.clear()

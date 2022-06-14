@@ -12,6 +12,7 @@ def main():
     app = Quaking(100,100)
 
     def setup():
+        app.size(200, 200)
         app.fill(255, 255, 255)
         # app.arc(50, 55, 50, 50, 0, HALF_PI)
         app.arc(50, 55, 50, 25, 0, HALF_PI)

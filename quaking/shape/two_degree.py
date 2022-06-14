@@ -1,4 +1,3 @@
-
 class Shape2D():
     def __init__(self, quaking):
         self.quaking = quaking
@@ -12,11 +11,13 @@ class Shape2D():
     def ellipse(self, *args, **kwargs):
         return self.quaking.obj_engine.ellipse(*args, **kwargs)
 
-    def circle(self, *args, **kwargs):
-        return self.quaking.obj_engine.circle(*args, **kwargs)
+    def circle(self, x, y, diameter, stroke_color=None, stroke_weight=None, fill_color=None):
+        return self.quaking.obj_engine.circle(x, y, diameter, stroke_color=stroke_color, stroke_weight=stroke_weight,
+                                              fill_color=fill_color)
 
-    def arc(self, *args, **kwargs):
-        return self.quaking.obj_engine.arc(*args, **kwargs)
+    def arc(self, x, y, rw, rh, ts, te, stroke_color=None, stroke_weight=None, fill_color=None, mode=0):
+        return self.quaking.obj_engine.arc(x, y, rw, rh, ts, te, stroke_color=stroke_color, stroke_weight=stroke_weight,
+                                           fill_color=fill_color, mode=mode)
 
     def quad(self, *args, **kwargs):
         return self.quaking.obj_engine.quad(*args, **kwargs)
