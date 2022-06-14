@@ -52,15 +52,15 @@ class EngineShape2d():
     def point(self, x, y, z=0, stroke_color=None, stroke_weight=None):
         if stroke_weight:
             GL.glBegin(GL.GL_POINTS)
-            GL.glVertex2f(x, y)
+            GL.glVertex3f(x, y, z)
             GL.glEnd()
 
     @wrap_stroke(2)
     def line(self, x1, y1, x2, y2, z1=0, z2=0, stroke_color=None, stroke_weight=None):
         if stroke_weight:
             GL.glBegin(GL.GL_LINES)
-            GL.glVertex2f(x1, y1)
-            GL.glVertex2f(x2, y2)
+            GL.glVertex3f(x1, y1, z1)
+            GL.glVertex3f(x2, y2, z2)
             GL.glEnd()
 
     def drawQuad(self, x1, y1, x2, y2, x3, y3, x4, y4, z1=0, z2=0, z3=0, z4=0):
@@ -83,9 +83,9 @@ class EngineShape2d():
 
     def drawTriangle(self, x1, y1, x2, y2, x3, y3):
         GL.glBegin(GL.GL_TRIANGLES)
-        GL.glVertex2f(x1, y1)
-        GL.glVertex2f(x2, y2)
-        GL.glVertex2f(x3, y3)
+        GL.glVertex3f(x1, y1, 0)
+        GL.glVertex3f(x2, y2, 0)
+        GL.glVertex3f(x3, y3, 0)
         GL.glEnd()
 
     def get_circle_points(self, xc, yc, x, y):
@@ -258,7 +258,7 @@ class EngineShape2d():
     def drawPoints(self, points, stroke_color=None, stroke_weight=None):
         GL.glBegin(GL.GL_POINTS)
         for point in points:
-            GL.glVertex2f(*point)
+            GL.glVertex3f(*point, 0)
         GL.glEnd()
 
     def drawPolygonLine(self, points, stroke_color=None, stroke_weight=None):
@@ -269,7 +269,7 @@ class EngineShape2d():
         GL.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_LINE)
         GL.glBegin(GL.GL_LINE_LOOP)
         for point in points:
-            GL.glVertex2f(*point)
+            GL.glVertex3f(*point, 0)
         GL.glEnd()
 
     def drawPolygonFill(self, points, fill_color=None, **kwargs):
@@ -278,7 +278,7 @@ class EngineShape2d():
             GL.glColor4ub(*fill_color)
             GL.glBegin(GL.GL_POLYGON)
             for point in points:
-                GL.glVertex2f(*point)
+                GL.glVertex3f(*point, 0)
             GL.glEnd()
 
     def drawPolygon(self, points, stroke_color=None, stroke_weight=None, fill_color=None):
@@ -301,7 +301,7 @@ class EngineShape2d():
             GL.glColor4ub(*self.stroke_color)
         GL.glBegin(GL.GL_LINE_STRIP)  # 如果绘制整圆，选GL_LINE_LOOP更好
         for point in points:
-            GL.glVertex2f(*point)
+            GL.glVertex3f(*point, 0)
         GL.glEnd()
 
     def drawLineStrip(self, line_points, fill_points, stroke_color=None, stroke_weight=None, fill_color=None):

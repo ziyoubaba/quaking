@@ -42,11 +42,17 @@ class Window(object):
         return window
 
     def set_coor(self, width, height):
-        GL.glViewport(0, 0, width, height)
         GL.glLoadIdentity()
+        GL.glViewport(0, 0, width, height)
+
+        # GL.glEnable(GL.GL_DEPTH_TEST)
+        # GL.glClearDepth(1.0)
+        # GL.glMatrixMode(GL.GL_MODELVIEW)
+
+        # coor
         # GLU.gluOrtho2D( 0, width, 0, height)  # 左下角
         # GLU.gluOrtho2D( 0, width, height, 0)  # 左上角
-        GL.glOrtho(0, width, height, 0, -5, 5)
+        GL.glOrtho(0, width, height, 0, 0.0, 1.0)
 
         # GLU.gluOrtho2D(0, width, height, 0, -100, 100)
         # GL.glClearDepth(1.0)                    # Set background depth to farthest

@@ -8,6 +8,7 @@ def main():
         app.translate(app.width/2, app.height/2)
         app.rotate_x(math.pi/3.0)
         app.ellipse(-26, -26, 52, 52)
+        app.rect(-26, -26, 52, 52)
 
     def draw():
         if app.mouse_pressed:
