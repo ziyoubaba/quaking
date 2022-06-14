@@ -3,6 +3,8 @@ from OpenGL import GL
 class EngineConf:
     def __init__(self):
         self.smooth()
+        # GL.glEnable(GL.GL_DEPTH_TEST)
+        # GL.glMatrixMode(GL.GL_PROJECTION)
 
     def smooth(self):
         # 开启抗锯齿 way1
@@ -12,6 +14,8 @@ class EngineConf:
         GL.glEnable(GL.GL_POINT_SMOOTH)
         GL.glEnable(GL.GL_POLYGON_SMOOTH)
         # GL.glHint(GL.GL_LINE_SMOOTH_HINT, GL.GL_NICEST)  #
+        # GL.glHint(GL.GL_POINT_SMOOTH_HINT, GL.GL_NICEST)  #
+        # GL.glHint(GL.GL_POLYGON_SMOOTH_HINT, GL.GL_NICEST)  #
         # way 2
         # GL.glEnable(GL.GL_MULTISAMPLE)
 

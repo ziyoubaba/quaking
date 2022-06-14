@@ -6,6 +6,8 @@ class Window(object):
     def __init__(self, width, height, title: str='', swap_buffer: bool=False):
         if not glfw.init():
             raise RuntimeError("glfw init error")
+        # glfw.window_hint(glfw.CONTEXT_VERSION_MAJOR, 3)
+        # glfw.window_hint(glfw.CONTEXT_VERSION_MINOR, 3)
         # glfw 配置
         self.swap_buffer = swap_buffer  # 默认开启swap_buffer
         if not self.swap_buffer:
@@ -44,7 +46,14 @@ class Window(object):
         GL.glLoadIdentity()
         # GLU.gluOrtho2D( 0, width, 0, height)  # 左下角
         # GLU.gluOrtho2D( 0, width, height, 0)  # 左上角
-        GL.glOrtho(0, width, height, 0, -1, 1)
+        GL.glOrtho(0, width, height, 0, -5, 5)
+
+        # GLU.gluOrtho2D(0, width, height, 0, -100, 100)
+        # GL.glClearDepth(1.0)                    # Set background depth to farthest
+        # GL.glEnable(GL.GL_DEPTH_TEST)    # Enable depth testing for z-culling
+        # GL.glDepthFunc(GL.GL_LEQUAL)     # Set the type of depth-test
+        # GL.glShadeModel(GL.GL_SMOOTH)    # Enable smooth shading
+        # GL.glHint(GL.GL_PERSPECTIVE_CORRECTION_HINT, GL.GL_NICEST)   # Nice perspective corrections
 
     def setPosition(self, screen_x, screen_y):
         glfw.set_window_pos(self.window, screen_x, screen_y)

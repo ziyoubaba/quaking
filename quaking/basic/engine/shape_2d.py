@@ -46,7 +46,7 @@ class EngineShape2d():
     def __init__(self):
         self.stroke_weight = 1  # 线条宽度
         self.stroke_color = (0, 0, 0, 255)  # 线条颜色
-        self.fill_color = (255, 255, 255, 0)  # 填充颜色
+        self.fill_color = (255, 255, 255, 255)  # 填充颜色
 
     @wrap_stroke(1)
     def point(self, x, y, z=0, stroke_color=None, stroke_weight=None):
