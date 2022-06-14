@@ -1,6 +1,7 @@
 from OpenGL import GL, GLU
 from functools import partial, wraps
 
+
 def wrap_stroke(shape=0, set_fill=False):
     def _func(fn):
         @wraps(fn)
@@ -36,13 +37,14 @@ def wrap_stroke(shape=0, set_fill=False):
                     GL.glLineWidth(stroke_weight)
             ret = fn(self, **kwargs)
             return ret
+
         return wrapper
+
     return _func
 
 
 class Engine():
     def __init__(self):
-        # self.background_color = (235, 235, 235, 255)
         self.stroke_weight = 1  # 线条宽度
         self.stroke_color = (0, 0, 0, 255)  # 线条颜色
         self.fill_color = (255, 255, 255, 0)  # 填充颜色
@@ -147,23 +149,19 @@ class Engine():
         """
         points = []
         arc_points = []
-        # (250, 400), (263, 399)
 
-        a = rx
-        b = ry
-        # double x,y,d1,d2,a,b;
         x = 0
-        y = b
-        d1 = b * b + a * a * (-b + 0.25)
+        y = ry
+        d1 = ry * ry + rx * rx * (-ry + 0.25)
 
         arc_points.append(self.get_ellipse_points(xc, yc, x, y))
         last_point = (x, y)
         # //椭圆AC弧段
-        while (b * b * (x + 1) < a * a * (y - 0.5)):
+        while (ry * ry * (x + 1) < rx * rx * (y - 0.5)):
             if (d1 < 0):
-                d1 += b * b * (2 * x + 3)
+                d1 += ry * ry * (2 * x + 3)
             else:
-                d1 += b * b * (2 * x + 3) + a * a * (-2 * y + 2)
+                d1 += ry * ry * (2 * x + 3) + rx * rx * (-2 * y + 2)
                 y -= 1
             x += 1
             if last_point[0] == x or last_point[1] == y:
@@ -172,13 +170,13 @@ class Engine():
                 arc_points.append(self.get_ellipse_points(xc, yc, x, y))
                 last_point = (x, y)
         # //椭圆CB弧段
-        d2 = b * b * (x + 0.5) * (x + 0.5) + a * a * (y - 1) * (y - 1) - a * a * b * b
+        d2 = ry * ry * (x + 0.5) * (x + 0.5) + rx * rx * (y - 1) * (y - 1) - rx * rx * ry * ry
         while (y > 0):
             if (d2 < 0):
-                d2 += b * b * (2 * x + 2) + a * a * (-2 * y + 3)
+                d2 += ry * ry * (2 * x + 2) + rx * rx * (-2 * y + 3)
                 x += 1
             else:
-                d2 += a * a * (-2 * y + 3)
+                d2 += rx * rx * (-2 * y + 3)
             y -= 1
             if last_point[0] == x or last_point[1] == y:
                 pass
@@ -187,13 +185,11 @@ class Engine():
                 last_point = (x, y)
 
         arc_points = zip(*arc_points)
-        _index = 0
-        for i in arc_points:
+        for _index, i in enumerate(arc_points):
             group_points = list(i)
             if _index % 2 == 0:
                 group_points.reverse()
             points.extend(group_points)
-            _index += 1
         return points
 
     @wrap_stroke(2, set_fill=True)
@@ -275,30 +271,8 @@ class Engine():
             GL.glLineWidth(stroke_weight)
         if stroke_color:
             GL.glColor4ub(*self.stroke_color)
-        GL.glEnable(GL.GL_LINE_SMOOTH)
-        GL.glHint(GL.GL_LINE_SMOOTH_HINT, GL.GL_NICEST)  #
         GL.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_LINE)
-        # GL.glEnable(GL.GL_LINE_STIPPLE)
-        # GL.glEnable(GL.GL_BLEND)
-        # GL.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_DST_ALPHA)
-        # GL.glEnable(GL.GL_POLYGON_SMOOTH)
-        # GL.glHint(GL.GL_POLYGON_SMOOTH_HINT, GL.GL_NICEST)
         GL.glBegin(GL.GL_LINE_LOOP)
-        for point in points:
-            GL.glVertex2f(*point)
-        GL.glEnd()
-
-    @wrap_stroke(2, set_fill=False)
-    def drawPolygon_remove(self, points, stroke_color=None, stroke_weight=None, fill_color=None):
-
-        GL.glPolygonMode(GL.GL_FRONT, GL.GL_LINE)
-        GL.glPolygonMode(GL.GL_BACK, GL.GL_FILL)
-
-        GL.glBegin(GL.GL_LINE_LOOP)
-        for point in points:
-            GL.glVertex2f(*point)
-        GL.glVertex2f(*points[0])
-        points.reverse()
         for point in points:
             GL.glVertex2f(*point)
         GL.glEnd()
@@ -312,11 +286,7 @@ class Engine():
                 GL.glVertex2f(*point)
             GL.glEnd()
 
-    @wrap_stroke(2, set_fill=True)
-    def circle(self, x, y, diameter, stroke_color=None, stroke_weight=None, fill_color=None):
-        radius = int(diameter / 2)
-        points = self.circle_points(x, y, radius)
-
+    def drawPolygon(self, points, stroke_color=None, stroke_weight=None, fill_color=None):
         if not fill_color:
             if stroke_weight:
                 # 线框
@@ -328,6 +298,12 @@ class Engine():
             if stroke_weight:
                 # 2 线框
                 self.drawPolygonLine(points, stroke_color=stroke_color, stroke_weight=stroke_weight)
+
+    @wrap_stroke(2, set_fill=True)
+    def circle(self, x, y, diameter, stroke_color=None, stroke_weight=None, fill_color=None):
+        radius = int(diameter / 2)
+        points = self.circle_points(x, y, radius)
+        self.drawPolygon(points, stroke_color=stroke_color, stroke_weight=stroke_weight, fill_color=fill_color)
 
     def arc(self):
         pass
@@ -337,17 +313,7 @@ class Engine():
         rx = int(a / 2)
         ry = int(b / 2)
         points = self.ellipse_points(x, y, rx, ry)
-        if not fill_color:
-            if stroke_weight:
-                # 线框
-                self.drawPolygonLine(points, stroke_color=stroke_color, stroke_weight=stroke_weight)
-        else:
-            # 填充与线框
-            # 1 填充
-            self.drawPolygonFill(points, fill_color=fill_color)
-            if stroke_weight:
-                # 2 线框
-                self.drawPolygonLine(points, stroke_color=stroke_color, stroke_weight=stroke_weight)
+        self.drawPolygon(points, stroke_color=stroke_color, stroke_weight=stroke_weight, fill_color=fill_color)
 
     def fill(self, r, g, b, a=255):
         self.fill_color = (r, g, b, a)
@@ -375,6 +341,7 @@ class Engine():
         GL.glEnable(GL.GL_LINE_SMOOTH)
         GL.glEnable(GL.GL_POINT_SMOOTH)
         GL.glEnable(GL.GL_POLYGON_SMOOTH)
+        # GL.glHint(GL.GL_LINE_SMOOTH_HINT, GL.GL_NICEST)  #
         # way 2
         # GL.glEnable(GL.GL_MULTISAMPLE)
 
