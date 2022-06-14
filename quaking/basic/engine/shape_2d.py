@@ -1,5 +1,5 @@
-from OpenGL import GL, GLU
-from functools import partial, wraps
+from OpenGL import GL
+from functools import wraps
 from math import pi, sin, cos, atan2
 
 
@@ -38,18 +38,15 @@ def wrap_stroke(shape=0, set_fill=False):
                     GL.glLineWidth(stroke_weight)
             ret = fn(self, **kwargs)
             return ret
-
         return wrapper
-
     return _func
 
 
-class Engine():
+class EngineShape2d():
     def __init__(self):
         self.stroke_weight = 1  # 线条宽度
         self.stroke_color = (0, 0, 0, 255)  # 线条颜色
         self.fill_color = (255, 255, 255, 0)  # 填充颜色
-        self.smooth()
 
     @wrap_stroke(1)
     def point(self, x, y, z=0, stroke_color=None, stroke_weight=None):
@@ -126,14 +123,11 @@ class Engine():
                 y -= 1
             x += 1
         arc_points = zip(*arc_points)
-        _index = 0
-        for i in arc_points:
+        for _index, i in enumerate(arc_points):
             group_points = list(i)
             if _index % 2 == 1:
                 group_points.reverse()
             points.extend(group_points)
-            _index += 1
-        # print( points )
         return points
 
     def get_ellipse_points(self, xc, yc, x, y):
@@ -305,7 +299,7 @@ class Engine():
             GL.glLineWidth(stroke_weight)
         if stroke_color:
             GL.glColor4ub(*self.stroke_color)
-        GL.glBegin(GL.GL_LINE_STRIP)    # 如果绘制整圆，选GL_LINE_LOOP更好
+        GL.glBegin(GL.GL_LINE_STRIP)  # 如果绘制整圆，选GL_LINE_LOOP更好
         for point in points:
             GL.glVertex2f(*point)
         GL.glEnd()
@@ -354,10 +348,12 @@ class Engine():
         return points
 
     def arc_ellipse(self, x, y, rw, rh, ts, te):
-        a = int(rw/2)
-        b = int(rh/2)
+        a = int(rw / 2)
+        b = int(rh / 2)
+
         def eccentric_angle(t):
-            return atan2(a*sin(t), b*cos(t))
+            return atan2(a * sin(t), b * cos(t))
+
         dt = 1 / max(a, b)
         t = ts  # ts为初始弧度，te为终止弧度
         points = []
@@ -369,7 +365,6 @@ class Engine():
             t += dt
             points.append((xc, yc))
         return points
-
 
     @wrap_stroke(2, set_fill=True)
     def arc(self, x, y, rw, rh, ts, te, stroke_color=None, stroke_weight=None, fill_color=None, mode=0):
@@ -407,7 +402,6 @@ class Engine():
         self.drawLineStrip(line_points=line_points, fill_points=fill_points, stroke_color=stroke_color,
                            stroke_weight=stroke_weight, fill_color=fill_color)
 
-
     @wrap_stroke(2, set_fill=True)
     def ellipse(self, x, y, a, b, stroke_color=None, stroke_weight=None, fill_color=None):
         rx = int(a / 2)
@@ -433,21 +427,3 @@ class Engine():
     def clear(self):
         # 清除颜色
         GL.glClear(GL.GL_COLOR_BUFFER_BIT)
-
-    def smooth(self):
-        # 开启抗锯齿 way1
-        GL.glEnable(GL.GL_BLEND)
-        GL.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA)
-        GL.glEnable(GL.GL_LINE_SMOOTH)
-        GL.glEnable(GL.GL_POINT_SMOOTH)
-        GL.glEnable(GL.GL_POLYGON_SMOOTH)
-        # GL.glHint(GL.GL_LINE_SMOOTH_HINT, GL.GL_NICEST)  #
-        # way 2
-        # GL.glEnable(GL.GL_MULTISAMPLE)
-
-    def no_smooth(self):
-        # 关闭抗锯齿功能
-        GL.glDisable(GL.GL_BLEND)
-        GL.glDisable(GL.GL_LINE_SMOOTH)
-        GL.glDisable(GL.GL_POINT_SMOOTH)
-        GL.glDisable(GL.GL_POLYGON_SMOOTH)
