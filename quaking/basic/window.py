@@ -43,11 +43,11 @@ class Window(object):
 
     def set_coor(self, width, height):
         GL.glLoadIdentity()
-        GL.glViewport(0, 0, width, height)
-        # GLU.gluOrtho2D( 0, width, 0, height)  # 左下角
-        GLU.gluOrtho2D( 0, width, height, 0)  # 左上角
-        # GL.glOrtho(0, width, height, 0, 0.0, 1.0)
-
+        # GLU.gluOrtho2D( 0, width-1, 0, height-1)  # 左下角
+        GLU.gluOrtho2D( 0, width, height-1, -1)  # 左上角
+        # GL.glViewport( 0, width, height, 0 )
+        # GL.glOrtho(0, width-1, height-1, 0, 0.0, 1.0)
+        # GL.glViewport(0, 0, width-1, height-1)
 
     def setPosition(self, screen_x, screen_y):
         glfw.set_window_pos(self.window, screen_x, screen_y)
@@ -94,9 +94,11 @@ class Window(object):
             glfw.set_window_size(self.window, width, height)
 
     def read_gl_pixels(self):
-        self.pixels = GL.glReadPixels(0, 0, self.width, self.height, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE)
+        pixels = GL.glReadPixels(0, 0, self.width, self.height, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE)
         self.pixels_w = self.width
         self.pixels_h = self.height
+        self.pixels = pixels
+        return pixels
 
     def draw_gl_pixels(self, pixels, width, height):
         GL.glDrawPixels(width, height, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, pixels)
@@ -128,3 +130,24 @@ class Window(object):
         else:
             # The window was restored
             pass
+
+    def load_pixels(self):
+        pixels = self.read_gl_pixels()
+
+    def pixel(self, pos_x, pos_y, pixel_degree=4):
+        """
+
+        :param pos_x:
+        :param pos_y:
+        :param pixel_degree:
+        :return:
+        """
+        # print(len(self.pixels))
+        if hasattr(self, "pixels"):
+            index_start = (self.pixels_w * (self.pixels_h-pos_y-1) + pos_x ) * pixel_degree # 左上角
+            # index_start = (self.pixels_w *  pos_y + pos_x  ) * pixel_degree   # 左下角
+            colors = []
+            for i in range(pixel_degree):
+                colors.append(self.pixels[index_start + i])
+            return colors
+
