@@ -8,15 +8,19 @@ def main():
         # app.stroke(0,0,0)
         # app.strokeWeight(1)
         app.fps = 10
-        im = app.obj_engine.load_image('./image.jpg')
+        im = app.obj_engine.load_image('./img.png')
         # im = im.transpose(Image.FLIP_TOP_BOTTOM)
         # print(im,dir(im))
         # print(im.tobytes())
-        app.obj_engine.image(im, 100,100,200, 200)
+        app.obj_engine.image(im, 0,0,400, 400)
+        app.obj_engine.image_light(im, 400, 0, 400, 400)
 
 
     def draw():
-        app.background(0,0,0,10)
+        # app.background(0,0,0,10)
+
+        pass
+
 
     app.run( setup, draw )
 

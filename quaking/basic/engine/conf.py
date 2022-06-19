@@ -5,6 +5,7 @@ class EngineConf:
         self.smooth()
         # GL.glEnable(GL.GL_DEPTH_TEST)
         # GL.glMatrixMode(GL.GL_PROJECTION)
+        # GL.glEnable( GL.GL_LIGHTING)
 
     def smooth(self):
         # 开启抗锯齿 way1

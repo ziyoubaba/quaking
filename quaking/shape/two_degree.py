@@ -5,6 +5,9 @@ class Shape2D():
     def point(self, *args, **kwargs):
         return self.quaking.obj_engine.point(*args, **kwargs)
 
+    def points(self, *args, **kwargs):
+        return self.quaking.obj_engine.points(*args, **kwargs)
+
     def line(self, *args, **kwargs):
         return self.quaking.obj_engine.line(*args, **kwargs)
 

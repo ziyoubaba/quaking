@@ -57,6 +57,17 @@ class EngineShape2d():
             GL.glVertex3f(x, y, z)
             GL.glEnd()
 
+    @wrap_stroke(1)
+    def points(self, points, stroke_color=None, stroke_weight=None):
+        if stroke_weight:
+            GL.glBegin(GL.GL_POINTS)
+            for point in points:
+                if len(point) == 2:
+                    GL.glVertex3f( *point, 0 )
+                elif len(point) == 3:
+                    GL.glVertex3f( *point )
+            GL.glEnd()
+
     @wrap_stroke(2)
     def line(self, x1, y1, x2, y2, z1=0, z2=0, stroke_color=None, stroke_weight=None):
         if stroke_weight:
@@ -430,35 +441,3 @@ class EngineShape2d():
         # 清除颜色
         GL.glClear(GL.GL_COLOR_BUFFER_BIT)
 
-    def image(self, obj_image, x, y, width, height):
-        """
-
-        :param obj_image:
-        :param x:
-        :param y:
-        :return:
-        """
-        img_format = GL.GL_RGB if obj_image.mode == "RGB" else GL.GL_RGBA
-        # 1 create a texture
-        texture = GL.glGenTextures(1)
-        GL.glPixelStorei(GL.GL_UNPACK_ALIGNMENT, 1)
-        GL.glBindTexture(GL.GL_TEXTURE_2D, texture)
-        GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_S, GL.GL_REPEAT)
-        GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_T, GL.GL_REPEAT)
-        GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_NEAREST)
-        GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_NEAREST)
-        GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, img_format, obj_image.size[0], obj_image.size[1], 0, img_format,
-                        GL.GL_UNSIGNED_BYTE, obj_image.tobytes())
-        GL.glEnable(GL.GL_TEXTURE_2D)
-        GL.glBegin(GL.GL_QUADS)
-        GL.glTexCoord2f( 0.0, 0.0 ); GL.glVertex3f( x, y, 0 )
-        GL.glTexCoord2f( 1.0, 0.0 ); GL.glVertex3f( x+width, y, 0 )
-        GL.glTexCoord2f( 1.0, 1.0 ); GL.glVertex3f( x+width, y+height, 0 )
-        GL.glTexCoord2f( 0.0, 1.0 ); GL.glVertex3f( x, y+height, 0 )
-        GL.glEnd()
-        GL.glDisable(GL.GL_TEXTURE_2D)
-
-    def load_image(self, image_file):
-        # load the image using Pillow
-        obj_image = Image.open(image_file)
-        return obj_image
