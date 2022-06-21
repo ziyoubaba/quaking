@@ -10,7 +10,7 @@ class EngineImage():
     def __init__(self):
         pass
 
-    def image(self, obj_image, x, y, width, height):
+    def image(self, obj_image, x, y, width, height, img_format=GL.GL_RGB):
         """
 
         :param obj_image:
@@ -18,7 +18,13 @@ class EngineImage():
         :param y:
         :return:
         """
-        img_format = GL.GL_RGB if obj_image.mode == "RGB" else GL.GL_RGBA
+        if isinstance(obj_image, bytes):
+            w, h = width, height
+            img_bytes = obj_image
+        else:
+            img_format = GL.GL_RGB if obj_image.mode == "RGB" else GL.GL_RGBA
+            w, h = obj_image.size
+            img_bytes = obj_image.tobytes()
         # 1 create a texture
         texture = GL.glGenTextures(1)
         GL.glPixelStorei(GL.GL_UNPACK_ALIGNMENT, 1)
@@ -27,8 +33,8 @@ class EngineImage():
         GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_T, GL.GL_REPEAT)
         GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_NEAREST)
         GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_NEAREST)
-        GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, img_format, obj_image.size[0], obj_image.size[1], 0, img_format,
-                        GL.GL_UNSIGNED_BYTE, obj_image.tobytes())
+        GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, img_format, w, h, 0, img_format,
+                        GL.GL_UNSIGNED_BYTE, img_bytes)
         GL.glEnable(GL.GL_TEXTURE_2D)
         GL.glBegin(GL.GL_QUADS)
         GL.glTexCoord2f( 0.0, 0.0 ); GL.glVertex3f( x, y, 0 )

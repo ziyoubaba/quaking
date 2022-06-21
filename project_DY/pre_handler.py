@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFilter
 
 class PreHandler:
     def __init__(self):
@@ -27,7 +27,7 @@ class PreHandler:
                     miny = min(miny, y)
                     maxx = max(maxx, x)
                     maxy = max(maxy, y)
-        box = (minx-1, miny-1, maxx+1, maxy+1)
+        box = (minx-2, miny-2, maxx+2, maxy+2)
         # print(box)
         im_crop = im.crop(box)
         # im_crop.show()
@@ -47,13 +47,14 @@ class PreHandler:
         # new_im.show()
         return new_im
 
-    def is_point(self, pix, r=150,g=150,b=150):
+    def is_point(self, pix, r=200,g=200,b=200):
         return sum(pix) < (r+g+b)
 
     def handler(self, filepath):
         im = self.load_img(filepath)
         im_new = self.crop_img(im)
         im_finally = self.transfer_img(im_new)
+        im_finally.filter(ImageFilter.SMOOTH_MORE)
         return im_finally
 
 if __name__ == '__main__':
