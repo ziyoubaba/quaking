@@ -5,6 +5,23 @@ from quaking import Quaking
 from project_DY.pre_handler import PreHandler
 from project_DY.later_handler import LaterHandler
 from PIL import Image, ImageOps
+from quaking.pvector import PVector
+
+class Point():
+    def __init__(self, pos_x, pos_y, x, y, ):
+        # self.x = x
+        # self.y = y
+        # self.pos_x = pos_x
+        # self.pos_y = pos_y
+        self.target = PVector(x, y)
+        self.pos = PVector(pos_x, pos_y)
+
+    def calc_new_pos(self, amt=0.1):
+        if self.pos.dist(self.target)>2:
+            self.pos = self.pos.lerp(self.target, amt=amt)
+        else:
+            self.pos = self.target
+
 
 class Animation:
     def __init__(self, filepath, w=720, h=1280):
@@ -21,16 +38,15 @@ class Animation:
         # 1 使图片居中
         im_w, im_h = self.im.size
         # self.app.width, self.app.height
-        x_rad = (self.app.width - 2*padding_x)/im_w
-        y_rad = (self.app.height- 2*padding_y)/im_h
+        x_rad = (self.app.width - 2 * padding_x) / im_w
+        y_rad = (self.app.height - 2 * padding_y) / im_h
         rad = min(x_rad, y_rad)
-        self.im = self.im.resize( (int(im_w*rad), int(im_h*rad)))
-
+        self.im = self.im.resize((int(im_w * rad), int(im_h * rad)))
         # print(im_w, im_h, x_rad, y_rad, rad, self.im.size)
         # 图片居中分布 - 获取 图片左上角坐标和长宽
         im_w, im_h = self.im.size
-        pos_x = int((self.app.width-im_w) * 0.5 )
-        pos_y = int((self.app.height-im_h) * 0.5 )
+        pos_x = int((self.app.width - im_w) * 0.5)
+        pos_y = int((self.app.height - im_h) * 0.5)
         return (pos_x, pos_y, im_w, im_h)
 
     def get_shape_points(self):
@@ -49,8 +65,20 @@ class Animation:
             pass
         else:
             for i in range(num):
-                points.append( (random.randint(0, self.app.width), random.randint(0, self.app.height)))
+                points.append((random.randint(0, self.app.width), random.randint(0, self.app.height)))
         return points
+
+    def split_points(self, points):
+        splited_points = []
+        for point in points:
+            splited_points.append(Point(
+                random.randint(0, self.app.width), random.randint(0, self.app.height), *point
+            ))
+        return splited_points
+
+    def update_split_points(self):
+        for point in self.splited_shape_points:
+            point.calc_new_pos()
 
     def init_stroke_color(self):
         self.stroke_color = [random.randint(150, 255), random.randint(150, 255), random.randint(150, 255), 255]
@@ -81,9 +109,13 @@ class Animation:
         self.shape_points = self.get_shape_points()
         self.star_points = self.get_star_points(num=1000)
         self.points = self.star_points + self.shape_points
+        self.splited_shape_points = self.split_points(self.shape_points)
         # self.stroke_color = (0, 0, 0, 255)
         self.init_stroke_color()
         self.set_color_mode(1)  # 1上升 0下降
+
+        self.star_striper = -1   # 星星闪烁间隔
+        self.star_points_shining = []   # 正在闪烁的星星
 
     def draw(self):
         self.app.clear()
@@ -131,8 +163,26 @@ class Animation:
         self.get_background()
         self.app.background(*self.background_color)
 
-        self.app.points(self.star_points, stroke_color=self.stroke_color)
-        self.app.points(self.shape_points, stroke_color=self.stroke_color)
+        # 星星慢点闪烁
+        if int(self.app.frame_count / 3) != self.star_striper:
+            self.star_points_shining = random.sample(self.star_points, int(len(self.star_points) * (99 / 100)))
+            self.star_striper = int(self.app.frame_count / 10)
+        if(self.star_points_shining):
+            self.app.points(self.star_points_shining, stroke_color=self.stroke_color)
+        # shape_points = self.shape_points[: self.app.frame_count * 10]
+        # if self.app.frame_count < len(self.shape_points):
+        #     shape_points = random.sample(self.shape_points, max(self.app.frame_count, 1000))
+        # else:
+        #     shape_points = self.shape_points
+        # self.app.points(shape_points, stroke_color=self.stroke_color)
+        # self.app.points(self.shape_points, stroke_color=self.stroke_color)
+
+        # 方案4
+        self.update_split_points()
+        # 展示星星
+        shape_points = [(point.pos.x, point.pos.y) for point in self.splited_shape_points]
+        self.app.points(shape_points, stroke_color=self.stroke_color)
+
         glow_params = {
             "ksize": 11,
             "sigmaX": 0,
@@ -147,10 +197,11 @@ class Animation:
         # 使用opencv进行glow操作
         self.app.load_pixels()
         # opengl -> opencv
-        image = Image.frombytes("RGBA", (self.app.obj_window.pixels_w, self.app.obj_window.pixels_h), self.app.obj_window.pixels)
+        image = Image.frombytes("RGBA", (self.app.obj_window.pixels_w, self.app.obj_window.pixels_h),
+                                self.app.obj_window.pixels)
         image = ImageOps.flip(image)
         # image.show()
-        cv_image = cv2.cvtColor(np.asarray(image),cv2.COLOR_RGB2BGR)
+        cv_image = cv2.cvtColor(np.asarray(image), cv2.COLOR_RGB2BGR)
         # cv2.imshow(f'CV frame {self.app.frame_count}', cv_image)
         # cv2.waitKey()
         # opencv -> opengl
@@ -163,11 +214,10 @@ class Animation:
         # print(ix, iy, self.app.obj_window.pixels_w, self.app.obj_window.pixels_h)
         self.app.image(tx_image, 0, 0, ix, iy)
 
-
     def run(self):
         # self.pos_x, self.pos_y, self.im_w, self.im_h = self.ana_img()
         # print(pos_x, pos_y, im_w, im_h)
-        self.app.run( self.setup, self.draw )
+        self.app.run(self.setup, self.draw)
 
 
 if __name__ == '__main__':
