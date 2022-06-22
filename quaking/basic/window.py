@@ -1,6 +1,6 @@
-import glfw
+import glfw, glm
 from OpenGL import GL, GLU
-
+from quaking.basic.engine.text import EngineText
 
 class Window(object):
     def __init__(self, width, height, title: str='', swap_buffer: bool=False):
@@ -44,10 +44,17 @@ class Window(object):
     def set_coor(self, width, height):
         GL.glLoadIdentity()
         # GLU.gluOrtho2D( 0, width-1, 0, height-1)  # 左下角
-        GLU.gluOrtho2D( 0, width, height-1, -1)  # 左上角
+        projection = GLU.gluOrtho2D( 0, width, height-1, -1)  # 左上角
+        # projection = glm.ortho(0, width, height-1, 0)
+        # EngineText().init_shader_coop(projection)
+        # GL.glUniformMatrix4fv(EngineShader.shader_projection, 1, GL.GL_FALSE, glm.value_ptr(projection))
         # GL.glViewport( 0, width, height, 0 )
         # GL.glOrtho(0, width-1, height-1, 0, 0.0, 1.0)
         # GL.glViewport(0, 0, width-1, height-1)
+        """
+        projection = glm.ortho(0, 640, 640, 0)
+        GL.glUniformMatrix4fv(shader_projection, 1, GL.GL_FALSE, glm.value_ptr(projection))
+        """
 
     def setPosition(self, screen_x, screen_y):
         glfw.set_window_pos(self.window, screen_x, screen_y)
