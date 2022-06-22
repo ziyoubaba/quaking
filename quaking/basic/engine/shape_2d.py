@@ -1,7 +1,6 @@
 from OpenGL import GL
 from functools import wraps
 from math import pi, sin, cos, atan2
-from PIL import Image
 
 def wrap_stroke(shape=0, set_fill=False):
     def _func(fn):
