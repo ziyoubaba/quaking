@@ -19,7 +19,10 @@ import math
 import numpy as np
 import OpenGL.GL as gl
 from freetype import *
-
+import os
+import ctypes
+import numpy as np
+import OpenGL.GL as gl
 
 class TextureAtlas:
 
@@ -253,7 +256,7 @@ class TextureFont:
         '''
         x.__getitem__(y) <==> x[y]
         '''
-        print(charcode)
+        # print(charcode)
         if charcode not in self.glyphs.keys():
             self.load('%c' % charcode)
         return self.glyphs[charcode]
@@ -311,6 +314,10 @@ class TextureFont:
             pitch  = face.glyph.bitmap.pitch
 
             x,y,w,h = self.atlas.get_region(width/self.depth+2, rows+2)
+            h = int(h)
+            w = int(w)
+            x = int(x)
+            y = int(y)
             if x < 0:
                 print ('Missed !')
                 continue
@@ -319,10 +326,7 @@ class TextureFont:
             data = []
             for i in range(rows):
                 data.extend(bitmap.buffer[i*pitch:i*pitch+width])
-            h = int(h)
-            w = int(w)
-            x = int(x)
-            y = int(y)
+
             data = np.array(data,dtype=np.ubyte).reshape(h,w,3)
             gamma = 1.5
             Z = ((data/255.0)**(gamma))
@@ -412,9 +416,7 @@ class TextureGlyph:
 
 
 
-import os
-import OpenGL.GL as gl
-import ctypes
+
 
 class Shader:
     ''' Base shader class. '''
@@ -548,47 +550,6 @@ class Shader:
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 # -----------------------------------------------------------------------------
 #
 #  FreeType high-level python API - Copyright 2011-2015 Nicolas P. Rougier
@@ -598,11 +559,7 @@ class Shader:
 '''
 Subpixel rendering AND positioning using OpenGL and shaders.
 '''
-import numpy as np
-import OpenGL.GL as gl
-import OpenGL.GLUT as glut
-#from texture_font import TextureFont, TextureAtlas
-#from shader import Shader
+
 
 
 vert='''
@@ -660,8 +617,6 @@ void main() {
    gl_FragColor = vec4( color.rgb, color.a);
 }
 '''
-
-
 
 
 
@@ -767,11 +722,11 @@ class Label:
 
 if __name__ == '__main__':
     import sys
+    import OpenGL.GLUT as glut
 
-    atlas = TextureAtlas(512,512,3)
+    atlas = TextureAtlas(50,100,3)
 
     def on_display( ):
-        #gl.glClearColor(0,0,0,1)
         gl.glClearColor(1,1,1,1)
         gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT)
         gl.glBindTexture( gl.GL_TEXTURE_2D, atlas.texid )
