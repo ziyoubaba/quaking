@@ -755,7 +755,7 @@ class Label:
         gl.glDrawElements(gl.GL_TRIANGLES, len(self.indices),
                           gl.GL_UNSIGNED_INT, self.indices)
         shader.unbind()
-        gl.glDisableVertexAttribArray( 1 );
+        gl.glDisableVertexAttribArray( 1 )
         gl.glDisableClientState(gl.GL_VERTEX_ARRAY)
         gl.glDisableClientState(gl.GL_COLOR_ARRAY)
         gl.glDisableClientState(gl.GL_TEXTURE_COORD_ARRAY)
@@ -778,13 +778,6 @@ if __name__ == '__main__':
         for label in labels:
             label.draw()
 
-        gl.glColor(0,0,0,1)
-        gl.glBegin(gl.GL_LINES)
-        gl.glVertex2i(15,0)
-        gl.glVertex2i(15, 330)
-        gl.glVertex2i(225, 0)
-        gl.glVertex2i(225, 330)
-        gl.glEnd()
         glut.glutSwapBuffers( )
 
     def on_reshape( width, height ):
@@ -815,7 +808,7 @@ if __name__ == '__main__':
     x,y = 20,310
     for i in range(5):
         labels.append(Label(text=text, font=font, x=x, y=y))
-        x += 0.1000000000001
+        x += 10
         y -= 18
     atlas.upload()
     shader = Shader(vert,frag)
