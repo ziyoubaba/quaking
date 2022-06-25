@@ -4,7 +4,7 @@ import numpy as np
 import os, glm
 from PIL import ImageFont
 
-FONT = os.path.join(os.path.dirname(os.path.dirname(__file__)), "fonts", "LXGWWenKai-Light.ttf")
+FONT = os.path.join(os.path.dirname(os.path.dirname(__file__)), "fonts", "SourceHanSerifSC-VF.ttf")
 print(FONT)
 print(os.path.exists(FONT))
 # change the filename if necessary

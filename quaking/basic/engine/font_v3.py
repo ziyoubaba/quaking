@@ -12,7 +12,7 @@ import OpenGL.GL as gl
 import OpenGL.GLUT as glut
 
 base, texid = 0, 0
-text = '''你好 Hello World ! '''
+text = '''hw Hello World ! '''
 
 
 def on_display():
@@ -31,17 +31,17 @@ def on_display():
     glut.glutSwapBuffers()
 
 
-def on_reshape(width, height):
-    gl.glViewport(0, 0, width, height)
-    gl.glMatrixMode(gl.GL_PROJECTION)
-    gl.glLoadIdentity()
-    gl.glOrtho(0, width, 0, height, -1, 1)
-    gl.glMatrixMode(gl.GL_MODELVIEW)
-    gl.glLoadIdentity()
+# def on_reshape(width, height):
+#     gl.glViewport(0, 0, width, height)
+#     gl.glMatrixMode(gl.GL_PROJECTION)
+#     gl.glLoadIdentity()
+#     gl.glOrtho(0, width, 0, height, -1, 1)
+#     gl.glMatrixMode(gl.GL_MODELVIEW)
+#     gl.glLoadIdentity()
 
 
-def on_keyboard(key, x, y):
-    if key == '\033': sys.exit()
+# def on_keyboard(key, x, y):
+#     if key == '\033': sys.exit()
 
 
 def makefont(filename, size):
@@ -106,6 +106,8 @@ def makefont(filename, size):
         gl.glEndList()
 
 
+
+
 if __name__ == '__main__':
     import sys
 
@@ -114,8 +116,10 @@ if __name__ == '__main__':
     glut.glutCreateWindow("Freetype OpenGL")
     glut.glutReshapeWindow(600, 100)
     glut.glutDisplayFunc(on_display)
-    glut.glutReshapeFunc(on_reshape)
-    glut.glutKeyboardFunc(on_keyboard)
+    # glut.glutReshapeFunc(on_reshape)
+    # glut.glutKeyboardFunc(on_keyboard)
+
+    # FONT = os.path.join(os.path.dirname(os.path.dirname(__file__)), "fonts", "SourceHanSerifSC-VF.ttf")
     gl.glTexEnvf(gl.GL_TEXTURE_ENV, gl.GL_TEXTURE_ENV_MODE, gl.GL_MODULATE)
     gl.glEnable(gl.GL_DEPTH_TEST)
     gl.glEnable(gl.GL_BLEND)
@@ -123,7 +127,7 @@ if __name__ == '__main__':
     gl.glColorMaterial(gl.GL_FRONT_AND_BACK, gl.GL_AMBIENT_AND_DIFFUSE)
     gl.glBlendFunc(gl.GL_SRC_ALPHA, gl.GL_ONE_MINUS_SRC_ALPHA)
     gl.glEnable(gl.GL_TEXTURE_2D)
-    FONT = os.path.join(os.path.dirname(os.path.dirname(__file__)), "fonts", "LXGWWenKai-Light.ttf")
-
+    FONT = os.path.join(os.path.dirname(os.path.dirname(__file__)), "fonts", "SourceHanSerifSC-VF.ttf")
     makefont(FONT, 64)
+    # makefont(FONT, 64)
     glut.glutMainLoop()

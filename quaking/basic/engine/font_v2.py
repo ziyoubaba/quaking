@@ -718,13 +718,29 @@ class Label:
         gl.glDisable( gl.GL_BLEND )
 
 
+FONT = os.path.join(os.path.dirname(os.path.dirname(__file__)), "fonts", "SourceHanSerifSC-VF.ttf")
+atlas = TextureAtlas(1000,1000,3)
+# atlas.upload()
+# font = TextureFont(atlas, FONT, 16)
+shader = Shader(vert,frag)
+#
+# def display(text, x, y):
+#     labels = []
+#     # x,y = 20,310
+#     for i in range(5):
+#         labels.append(Label(text=text, font=font, x=x, y=y))
+#         x += 10
+#         y -= 18
+#     gl.glBindTexture( gl.GL_TEXTURE_2D, atlas.texid )
+#     for label in labels:
+#         label.draw()
 
 
 if __name__ == '__main__':
     import sys
     import OpenGL.GLUT as glut
 
-    atlas = TextureAtlas(50,100,3)
+    # atlas = TextureAtlas(50,100,3)
 
     def on_display( ):
         gl.glClearColor(1,1,1,1)
@@ -754,10 +770,10 @@ if __name__ == '__main__':
     glut.glutDisplayFunc( on_display )
     glut.glutReshapeFunc( on_reshape )
     glut.glutKeyboardFunc( on_keyboard )
-    FONT = os.path.join(os.path.dirname(os.path.dirname(__file__)), "fonts", "LXGWWenKai-Light.ttf")
+    # FONT = os.path.join(os.path.dirname(os.path.dirname(__file__)), "fonts", "SourceHanSerifSC-VF.ttf")
 
     font = TextureFont(atlas, FONT, 16)
-    text = u"𦄀𦄁Éé, Èè, Êê, ËëA Quick Brown Fox Jumps Over The Lazy Dog"
+    text = u" 你好 Quick Brown Fox Jumps Over The Lazy Dog"
     # text = u"阿斯达稍等无asdasd"
     labels = []
     x,y = 20,310
@@ -766,5 +782,5 @@ if __name__ == '__main__':
         x += 10
         y -= 18
     atlas.upload()
-    shader = Shader(vert,frag)
+    # shader = Shader(vert,frag)
     glut.glutMainLoop( )

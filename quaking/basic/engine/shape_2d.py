@@ -71,8 +71,8 @@ class EngineShape2d():
     def line(self, x1, y1, x2, y2, z1=0, z2=0, stroke_color=None, stroke_weight=None):
         if stroke_weight:
             GL.glBegin(GL.GL_LINES)
-            GL.glVertex3f(x1, y1, z1)
-            GL.glVertex3f(x2, y2, z2)
+            GL.glVertex2f(x1, y1,)
+            GL.glVertex2f(x2, y2,)
             GL.glEnd()
 
     def drawQuad(self, x1, y1, x2, y2, x3, y3, x4, y4, z1=0, z2=0, z3=0, z4=0):
@@ -246,25 +246,26 @@ class EngineShape2d():
     @wrap_stroke(2, set_fill=True)
     def rect(self, x, y, w, h, stroke_color=None, stroke_weight=None, fill_color=None):
         # print(stroke_weight, stroke_color, fill_color)
+        # GL.glEnable(GL.GL_TEXTURE_2D)
         x2 = x + w
         y2 = y + h
         if not fill_color:
             if stroke_weight:
                 # 线框
-                GL.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_LINE)
+                GL.glPolygonMode(GL.GL_FRONT, GL.GL_LINE)
                 self.drawRect(x, y, x2, y2)
         else:
             # 填充与线框
             # 1 填充
-            GL.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL)
-            GL.glColor4ub(*fill_color)
-            self.drawRect(x, y, x2, y2)
             if stroke_weight:
                 # 2 线框
                 if stroke_color:
                     GL.glColor4ub(*stroke_color)
                 GL.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_LINE)
                 self.drawRect(x, y, x2, y2)
+            GL.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL)
+            GL.glColor4ub(*fill_color)
+            self.drawRect(x, y, x2, y2)
 
     @wrap_stroke(1, set_fill=False)
     def drawPoints(self, points, stroke_color=None, stroke_weight=None):
