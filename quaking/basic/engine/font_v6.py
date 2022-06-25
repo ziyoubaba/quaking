@@ -13,19 +13,22 @@ import OpenGL.GL as gl
 import os
 
 Font = os.path.join(os.path.dirname(os.path.dirname(__file__)), "fonts", "SourceHanSerifSC-VF.ttf")
+Font = os.path.join(os.path.dirname(os.path.dirname(__file__)), "fonts", "Nickainley-Normal.otf")
+# Font = os.path.join(os.path.dirname(os.path.dirname(__file__)), "fonts", "Italianno-Regular.ttf")
+# Font = os.path.join(os.path.dirname(os.path.dirname(__file__)), "fonts", "Napoli Initialen.ttf")
+# Font = os.path.join(os.path.dirname(os.path.dirname(__file__)), "fonts", "xenipp3U.ttf")
 
 base, texid = 0, 0
 face = Face(Font)
 
+width, height, ascender, descender = 0,0,0,0
 
-def makefont(filename, size, pos_x=0, pos_y=0):
+def init_font(size):
     global texid, face
-
     # Load font  and check it is monotype
     face.set_char_size(size * 64)
     # if not face.is_fixed_width:
     #     raise 'Font is not monotype'
-
     # Determine largest glyph size
     width, height, ascender, descender = 0, 0, 0, 0
     for c in range(32, 128):
@@ -35,7 +38,16 @@ def makefont(filename, size, pos_x=0, pos_y=0):
         ascender = max(ascender, face.glyph.bitmap_top)
         descender = max(descender, bitmap.rows - face.glyph.bitmap_top)
     height = ascender + descender
+    print(width, height, ascender, descender)
+    return width, height, ascender, descender
 
+
+def makefont(filename, size, pos_x=0, pos_y=0):
+    global texid, face
+    global width, height, ascender, descender
+
+    if not width:
+        width, height, ascender, descender = init_font(size)
     # Generate texture data
     Z = numpy.zeros((height * 6, width * 16), dtype=numpy.ubyte)
     for j in range(6):

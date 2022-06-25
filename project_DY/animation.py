@@ -7,6 +7,8 @@ from project_DY.later_handler import LaterHandler
 from project_DY.title import TitleHandler
 from PIL import Image, ImageOps
 from quaking.pvector import PVector
+from quaking.basic.engine.font_v6 import face, init_font
+from freetype import *
 
 do_glow = True
 do_points = True
@@ -40,20 +42,36 @@ class Animation:
         self.title = title
         # self.title_len = TitleHandler().calc_text_width(title)
         # 计算文字的大小 - 标题宽度最大为一半 最大为32
-        self.title_font_size = self.calc_title_font()
-        self.title_len = self.title_font_size * len(title)
-        self.title_pos_x, self.title_pos_y = self.ana_title(self.title_len, )
-        print(self.title_font_size, self.title_pos_x, self.title_pos_y, self.title_len)
+        self.title_font_size = 38
+        # self.title_font_size = self.calc_title_font()
+        self.title_width, self.title_height = self.calc_title_size()
+        self.title_pos_x, self.title_pos_y = self.ana_title(self.title_width, )
+        print(self.title_font_size, self.title_pos_x, self.title_pos_y, self.title_width)
 
-    def calc_title_font(self):
-        max_len =  int (self.app.width * 2/3 / len(self.title))
-        return min(max_len, 32)
+    # def calc_title_font(self):
+    #     max_len =  int (self.app.width * 1/2/len(self.title))
+    #     return min(max_len, 24)
 
-    def ana_title(self, title_len, padding_y=10):
+    def calc_title_size(self):
+        init_font(self.title_font_size)
+        width = 0
+        ascender, descender = 0, 0
+        for c in self.title:
+            face.load_char(c, FT_LOAD_RENDER | FT_LOAD_FORCE_AUTOHINT)
+            bitmap = face.glyph.bitmap
+            width = max(width, bitmap.width)
+            # title_width += bitmap.width
+            ascender = max(ascender, face.glyph.bitmap_top)
+            descender = max(descender, bitmap.rows - face.glyph.bitmap_top)
+        title_height = ascender + descender
+        return width*(len(self.title)+1), title_height
+
+
+    def ana_title(self, title_width, padding_y=10):
         # 1 使图片居中
-        pos_x = int((self.app.width - title_len) / 2)
+        pos_x = int((self.app.width - title_width) / 2)
         header_height = int((self.app.height - self.im_h)/2)
-        pos_y = (header_height - self.title_font_size) / 2
+        pos_y = (header_height - self.title_height) / 2
         return (pos_x, pos_y)
 
     def ana_img(self, padding_x=30, padding_y=54):
@@ -124,7 +142,7 @@ class Animation:
 
     def setup(self):
         self.app.no_smooth()
-        self.app.frame_rate(1)
+        self.app.frame_rate(20)
         self.app.background(0, 0, 0, 255)
         self.app.image(self.im, self.pos_x, self.pos_y, self.im_w, self.im_h)
         self.app.load_pixels()  # 加载像素
@@ -253,5 +271,5 @@ class Animation:
 
 
 if __name__ == '__main__':
-    Animation("./imgs/demo.png", 'Test Dem', w=540, h=960).run()
+    Animation("./imgs/demo.png", 'TestDemt', w=540, h=960).run()
     # Animation("./imgs/demo.png", 'Test Demo', w=270, h=480).run()
