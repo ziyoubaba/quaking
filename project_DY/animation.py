@@ -4,8 +4,12 @@ import numpy as np
 from quaking import Quaking
 from project_DY.pre_handler import PreHandler
 from project_DY.later_handler import LaterHandler
+from project_DY.title import TitleHandler
 from PIL import Image, ImageOps
 from quaking.pvector import PVector
+
+do_glow = True
+do_points = True
 
 class Point():
     def __init__(self, pos_x, pos_y, x, y, ):
@@ -24,7 +28,7 @@ class Point():
 
 
 class Animation:
-    def __init__(self, filepath, w=720, h=1280):
+    def __init__(self, filepath, title='', w=720, h=1280):
         """
         视频尺寸一般为宽高9：16的比例，分辨率为540*960。也可以使用更高分辨率的视频，例如720/1280、1080/1920等。
         :param w:
@@ -33,6 +37,24 @@ class Animation:
         self.app = Quaking(w, h, swap_buffer=True)
         self.im = PreHandler().handler(filepath)
         self.pos_x, self.pos_y, self.im_w, self.im_h = self.ana_img()
+        self.title = title
+        # self.title_len = TitleHandler().calc_text_width(title)
+        # 计算文字的大小 - 标题宽度最大为一半 最大为32
+        self.title_font_size = self.calc_title_font()
+        self.title_len = self.title_font_size * len(title)
+        self.title_pos_x, self.title_pos_y = self.ana_title(self.title_len, )
+        print(self.title_font_size, self.title_pos_x, self.title_pos_y, self.title_len)
+
+    def calc_title_font(self):
+        max_len =  int (self.app.width * 2/3 / len(self.title))
+        return min(max_len, 32)
+
+    def ana_title(self, title_len, padding_y=10):
+        # 1 使图片居中
+        pos_x = int((self.app.width - title_len) / 2)
+        header_height = int((self.app.height - self.im_h)/2)
+        pos_y = (header_height - self.title_font_size) / 2
+        return (pos_x, pos_y)
 
     def ana_img(self, padding_x=30, padding_y=54):
         # 1 使图片居中
@@ -102,7 +124,7 @@ class Animation:
 
     def setup(self):
         self.app.no_smooth()
-        self.app.frame_rate(20)
+        self.app.frame_rate(1)
         self.app.background(0, 0, 0, 255)
         self.app.image(self.im, self.pos_x, self.pos_y, self.im_w, self.im_h)
         self.app.load_pixels()  # 加载像素
@@ -161,27 +183,35 @@ class Animation:
         if not status:
             self.switch_color_mode()
         self.get_background()
-        self.app.background(*self.background_color)
 
-        # 星星慢点闪烁
-        if int(self.app.frame_count / 3) != self.star_striper:
-            self.star_points_shining = random.sample(self.star_points, int(len(self.star_points) * (99 / 100)))
-            self.star_striper = int(self.app.frame_count / 10)
-        if(self.star_points_shining):
-            self.app.points(self.star_points_shining, stroke_color=self.stroke_color)
-        # shape_points = self.shape_points[: self.app.frame_count * 10]
-        # if self.app.frame_count < len(self.shape_points):
-        #     shape_points = random.sample(self.shape_points, max(self.app.frame_count, 1000))
-        # else:
-        #     shape_points = self.shape_points
-        # self.app.points(shape_points, stroke_color=self.stroke_color)
-        # self.app.points(self.shape_points, stroke_color=self.stroke_color)
+        if do_points:
+            self.app.background(*self.background_color)
 
-        # 方案4
-        self.update_split_points()
-        # 展示星星
-        shape_points = [(point.pos.x, point.pos.y) for point in self.splited_shape_points]
-        self.app.points(shape_points, stroke_color=self.stroke_color)
+            # 星星慢点闪烁
+            if int(self.app.frame_count / 3) != self.star_striper:
+                self.star_points_shining = random.sample(self.star_points, int(len(self.star_points) * (99 / 100)))
+                self.star_striper = int(self.app.frame_count / 10)
+            if(self.star_points_shining):
+                self.app.points(self.star_points_shining, stroke_color=self.stroke_color)
+            # shape_points = self.shape_points[: self.app.frame_count * 10]
+            # if self.app.frame_count < len(self.shape_points):
+            #     shape_points = random.sample(self.shape_points, max(self.app.frame_count, 1000))
+            # else:
+            #     shape_points = self.shape_points
+            # self.app.points(shape_points, stroke_color=self.stroke_color)
+            # self.app.points(self.shape_points, stroke_color=self.stroke_color)
+
+            # 方案4
+            self.update_split_points()
+            # 展示星星
+            shape_points = [(point.pos.x, point.pos.y) for point in self.splited_shape_points]
+            self.app.points(shape_points, stroke_color=self.stroke_color)
+
+        # title
+        self.app.obj_engine.text(self.title, size=self.title_font_size, x=self.title_pos_x, y=self.title_pos_y,
+                                 color=self.stroke_color
+                                 # color=(255,255,255,255)
+                                 )
 
         glow_params = {
             "ksize": 11,
@@ -193,26 +223,28 @@ class Animation:
         }
         # glow_params['weight_beta'] = sum(self.stroke_color) / (255 * 4)
 
-        # do glow
-        # 使用opencv进行glow操作
-        self.app.load_pixels()
-        # opengl -> opencv
-        image = Image.frombytes("RGBA", (self.app.obj_window.pixels_w, self.app.obj_window.pixels_h),
-                                self.app.obj_window.pixels)
-        image = ImageOps.flip(image)
-        # image.show()
-        cv_image = cv2.cvtColor(np.asarray(image), cv2.COLOR_RGB2BGR)
-        # cv2.imshow(f'CV frame {self.app.frame_count}', cv_image)
-        # cv2.waitKey()
-        # opencv -> opengl
-        glowd_img = LaterHandler().glow(cv_image, **glow_params)
-        tx_image = cv2.flip(glowd_img, 0)
-        tx_image = Image.fromarray(tx_image)
-        ix = tx_image.size[0]
-        iy = tx_image.size[1]
-        tx_image = tx_image.tobytes('raw', 'BGR', 0, -1)
-        # print(ix, iy, self.app.obj_window.pixels_w, self.app.obj_window.pixels_h)
-        self.app.image(tx_image, 0, 0, ix, iy)
+        if do_glow:
+            # do glow
+            # 使用opencv进行glow操作
+            self.app.load_pixels()
+            # opengl -> opencv
+            image = Image.frombytes("RGBA", (self.app.obj_window.pixels_w, self.app.obj_window.pixels_h),
+                                    self.app.obj_window.pixels)
+            image = ImageOps.flip(image)
+            # image.show()
+            cv_image = cv2.cvtColor(np.asarray(image), cv2.COLOR_RGB2BGR)
+            # cv2.imshow(f'CV frame {self.app.frame_count}', cv_image)
+            # cv2.waitKey()
+            # opencv -> opengl
+            glowd_img = LaterHandler().glow(cv_image, **glow_params)
+            # cv2.imshow("raw3", glowd_img)
+            tx_image = cv2.flip(glowd_img, 0)
+            tx_image = Image.fromarray(tx_image)
+            ix = tx_image.size[0]
+            iy = tx_image.size[1]
+            tx_image = tx_image.tobytes('raw', 'BGR', 0, -1)
+            # print(ix, iy, self.app.obj_window.pixels_w, self.app.obj_window.pixels_h)
+            self.app.image(tx_image, 0, 0, ix, iy)
 
     def run(self):
         # self.pos_x, self.pos_y, self.im_w, self.im_h = self.ana_img()
@@ -221,5 +253,5 @@ class Animation:
 
 
 if __name__ == '__main__':
-    # Animation("./imgs/demo.png", 540, 960).run()
-    Animation("./imgs/demo.png", 270, 480).run()
+    Animation("./imgs/demo.png", 'Test Dem', w=540, h=960).run()
+    # Animation("./imgs/demo.png", 'Test Demo', w=270, h=480).run()

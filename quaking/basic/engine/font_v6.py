@@ -12,16 +12,16 @@ import OpenGL.GL as gl
 
 import os
 
-FONT = os.path.join(os.path.dirname(os.path.dirname(__file__)), "fonts", "SourceHanSerifSC-VF.ttf")
+Font = os.path.join(os.path.dirname(os.path.dirname(__file__)), "fonts", "SourceHanSerifSC-VF.ttf")
 
 base, texid = 0, 0
+face = Face(Font)
 
 
 def makefont(filename, size, pos_x=0, pos_y=0):
-    global texid
+    global texid, face
 
     # Load font  and check it is monotype
-    face = Face(filename)
     face.set_char_size(size * 64)
     # if not face.is_fixed_width:
     #     raise 'Font is not monotype'
@@ -77,27 +77,23 @@ def makefont(filename, size, pos_x=0, pos_y=0):
             # gl.glEnd( )
             # gl.glPolygonMode(gl.GL_FRONT_AND_BACK, gl.GL_FILL)
             gl.glBegin(gl.GL_QUADS)
-            gl.glTexCoord2f((x) * dx, (y) * dy);
-            gl.glVertex3f(pos_x, pos_y, 0)
-            gl.glTexCoord2f((x + 1) * dx, (y) * dy);
-            gl.glVertex3f(pos_x + width, pos_y, 0)
-            gl.glTexCoord2f((x + 1) * dx, (y + 1) * dy);
-            gl.glVertex3f(pos_x + width, pos_y + height, 0)
-            gl.glTexCoord2f((x) * dx, (y + 1) * dy);
-            gl.glVertex3f(pos_x, pos_y + height, 0)
+            gl.glTexCoord2f((x) * dx, (y) * dy); gl.glVertex3f(pos_x, pos_y, 0)
+            gl.glTexCoord2f((x + 1) * dx, (y) * dy); gl.glVertex3f(pos_x + width, pos_y, 0)
+            gl.glTexCoord2f((x + 1) * dx, (y + 1) * dy); gl.glVertex3f(pos_x + width, pos_y + height, 0)
+            gl.glTexCoord2f((x) * dx, (y + 1) * dy); gl.glVertex3f(pos_x, pos_y + height, 0)
             gl.glEnd()
             gl.glTranslatef(width, 0, 0)
         gl.glEndList()
 
 
 def display(text, size=16, pos_x=0, pos_y=0, color=(0,0,0,255)):
-    # gl.glTexEnvf( gl.GL_TEXTURE_ENV, gl.GL_TEXTURE_ENV_MODE, gl.GL_MODULATE )
+    gl.glTexEnvf( gl.GL_TEXTURE_ENV, gl.GL_TEXTURE_ENV_MODE, gl.GL_MODULATE )
     # gl.glEnable( gl.GL_DEPTH_TEST )
-    # gl.glEnable( gl.GL_BLEND )
-    # gl.glEnable( gl.GL_COLOR_MATERIAL )
-    # gl.glColorMaterial( gl.GL_FRONT_AND_BACK, gl.GL_AMBIENT_AND_DIFFUSE )
+    gl.glEnable( gl.GL_BLEND )
+    gl.glEnable( gl.GL_COLOR_MATERIAL )
+    gl.glColorMaterial( gl.GL_FRONT_AND_BACK, gl.GL_AMBIENT_AND_DIFFUSE )
     gl.glBlendFunc( gl.GL_SRC_ALPHA, gl.GL_ONE_MINUS_SRC_ALPHA )
-    makefont(FONT, size, pos_x=pos_x, pos_y=pos_y)
+    makefont(Font, size, pos_x=pos_x, pos_y=pos_y)
 
     global texid
     # gl.glClearColor(1,1,1,1)
