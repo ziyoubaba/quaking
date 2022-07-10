@@ -29,3 +29,23 @@ class LaterHandler:
         # cv2.imshow('Test', cv2.cvtColor(img_blurred, cv2.COLOR_RGB2BGR))
         # cv2.waitKey()
         return img_blurred
+
+    # def img2video(self, image, video_path, fps=1, seconds=1, size=(720, 1280)):
+    #     """
+    #     单张图片 -> 视频
+    #     :param image: pil image data: cv2.cvtColor(np.asarray(image), cv2.COLOR_RGB2BGR) -> cv2
+    #     :param video_path:
+    #     :param fps:
+    #     :param size:
+    #     :return:
+    #     """
+    #     fourcc = cv2.VideoWriter_fourcc("m", "p", "4", "v")    # mp4
+    #     video_writer = cv2.VideoWriter(video_path, fourcc, fps, image.size)
+    #     # for image in images:
+    #     frame = cv2.cvtColor(np.asarray(image), cv2.COLOR_RGB2BGR)
+    #     for i in range(seconds):
+    #         video_writer.write(frame)
+    #     video_writer.release()
+
+    def video_frame(self, video, frame, ):
+        video.write(frame)

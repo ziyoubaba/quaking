@@ -13,10 +13,11 @@ import OpenGL.GL as gl
 import os
 
 Font = os.path.join(os.path.dirname(os.path.dirname(__file__)), "fonts", "SourceHanSerifSC-VF.ttf")
-Font = os.path.join(os.path.dirname(os.path.dirname(__file__)), "fonts", "Nickainley-Normal.otf")
-# Font = os.path.join(os.path.dirname(os.path.dirname(__file__)), "fonts", "Italianno-Regular.ttf")
+Font = os.path.join(os.path.dirname(os.path.dirname(__file__)), "fonts", "Italianno-Regular.ttf")
 # Font = os.path.join(os.path.dirname(os.path.dirname(__file__)), "fonts", "Napoli Initialen.ttf")
-# Font = os.path.join(os.path.dirname(os.path.dirname(__file__)), "fonts", "xenipp3U.ttf")
+# Font = os.path.join(os.path.dirname(os.path.dirname(__file__)), "fonts", "PinyonScript-Regular.ttf")
+# Font = os.path.join(os.path.dirname(os.path.dirname(__file__)), "fonts", "Napoli Initialen.ttf")
+Font = os.path.join(os.path.dirname(os.path.dirname(__file__)), "fonts", "Canterbury.ttf")
 
 base, texid = 0, 0
 face = Face(Font)
@@ -38,7 +39,7 @@ def init_font(size):
         ascender = max(ascender, face.glyph.bitmap_top)
         descender = max(descender, bitmap.rows - face.glyph.bitmap_top)
     height = ascender + descender
-    print(width, height, ascender, descender)
+    # print(width, height, ascender, descender)
     return width, height, ascender, descender
 
 
